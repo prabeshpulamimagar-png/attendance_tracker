@@ -141,7 +141,7 @@ class _AttendanceTrackerScreenState extends State<AttendanceTrackerScreen> {
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
 
   static const String scriptUrl =
-      'https://script.google.com/macros/s/AKfycbx2X6v8hwWrEpfi1zkl9r1a6IXNwOvRn_9V1Fyfz8W0br_6IkOajuPqhALcksCTkucE1A/exec';
+      'https://script.google.com/macros/s/AKfycbwqGECS62PuolhoBVoQ5l5Zq2aXG7SuOm3trGBpSVqmU_a24sPqzM1xZ1_SM30OLlx1UQ/exec';
 
   String _name = '';
   String _company = '';
@@ -199,8 +199,25 @@ class _AttendanceTrackerScreenState extends State<AttendanceTrackerScreen> {
     });
   }
 
+  // यहाँ गुगल शीटको ट्याबको नाम (जस्तै: JAN 2027) सँग मिल्ने गरी मिलाइएको छ
   String get _selectedMonthKey {
-    return DateFormat('yyyy-MM').format(_selectedMonth);
+    List<String> months = [
+      "JAN",
+      "FEB",
+      "MAR",
+      "APR",
+      "MAY",
+      "JUN",
+      "JUL",
+      "AUG",
+      "SEP",
+      "OCT",
+      "NOV",
+      "DEC"
+    ];
+    String mStr = months[_selectedMonth.month - 1];
+    String yStr = _selectedMonth.year.toString();
+    return "$mStr $yStr";
   }
 
   String get _selectedMonthName {
@@ -466,7 +483,6 @@ class _AttendanceTrackerScreenState extends State<AttendanceTrackerScreen> {
     final summary = _attendanceData?.summary;
     if (summary == null) return 0;
 
-    // यदि कुञ्जी 'V' खोजिएको छ भने 'VACATION' पनि चेक गर्ने
     var value = summary[key];
     if (value == null && key == 'V') {
       value = summary['VACATION'];
@@ -492,9 +508,20 @@ class _AttendanceTrackerScreenState extends State<AttendanceTrackerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Attendance Tracker',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              height: 32,
+              width: 32,
+              child: Image.asset('assets/sk_new_logo.png'),
+            ),
+            const SizedBox(width: 10),
+            const Text(
+              'Attendance Tracker',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
         ),
         actions: [
           IconButton(
